@@ -1,0 +1,58 @@
+.caption {
+    text-align: center;
+    color: blue;
+}
+
+.input_board {
+    display: block;
+    margin: 0px auto;
+    width: 70%;
+    height: 40vh;
+}
+
+.keyboard {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    padding: 10px 0;
+    user-select: none;
+    background-color: aquamarine;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+    transition: bottom 0.4s;
+    -webkit-transition: bottom 0.4s;
+    -moz-transition: bottom 0.4s;
+    -ms-transition: bottom 0.4s;
+    -o-transition: bottom 0.4s;
+}
+
+.keybord--hidden {
+    bottom: -100%;
+}
+
+.keyboard__keys {
+    text-align: center;
+}
+
+.keyboard__key {
+    margin: 3px;
+    width: 6%;
+    max-width: 90px;
+    height: 45px;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    background: rgba(255,255,255, 0.2);
+    color: #ffffff;
+    font-size: 1.05rem;
+    outline: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: top;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
