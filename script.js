@@ -1,4 +1,3 @@
-
 function addInput() {
     const caption = document.createElement('h1');
     caption.classList.add('caption');
@@ -25,17 +24,23 @@ function addKeybord() {
 
 }
 addKeybord();
+let capsLock;
+
+//Key is active?
+const isActive = (el) => Boolean(el.classList.contains("keyboard__key--active"));
+
 //Add text on input area
 const textArea = document.querySelector(".input_board");
 
 function addText(text) {
-    textArea.value += `${text}`;
+    textArea.value += isActive(capsLock) && text[0] !== '\\' ? `${text.toUpperCase()}` : `${text}`;
 }
 //Backspace
 const backspace = () => textArea.value = textArea.value.substring(0, textArea.value.length - 1);
 
-//Clear
+//Clear text Area
 const clearTextArea = () => textArea.value = "";
+
 
 function createKeyIcons(icon_name) {
     return `<i class="material-icons">${icon_name}</i>`
@@ -53,8 +58,8 @@ function createKeys() {
 
     keyLayout.forEach(key =>{
         const keyEl = document.createElement("button");
-        const insertLineBreak = ["backspase", "p", "enter", "?"].indexOf(key) === 1;
-
+        const insertLineBreak = ["backspace", "p", "enter", "?"].indexOf(key) !== -1;
+        console.log(insertLineBreak)
         keyEl.setAttribute("type", "button");
         keyEl.classList.add("keyboard__key");
 
@@ -63,10 +68,62 @@ function createKeys() {
                 keyEl.classList.add("keyboard__key--wide");
                 keyEl.innerHTML = createKeyIcons("backspace");
                 keyEl.addEventListener("click", () => {
-
+                    backspace();
+                });
+                keyEl.addEventListener("keydown", () => {
+                    while(true) {backspace()};
                 });
                 break;
+               
+            case "caps":
+                keyEl.classList.add("keyboard__key--wide", "keyboard__key--inactive");
+                keyEl.id = "caps_lock"
+                keyEl.innerHTML = createKeyIcons("keybord_capslock");
+                keyEl.addEventListener("click", () => {
+                    keyEl.classList.toggle("keyboard__key--inactive");
+                    keyEl.classList.toggle("keyboard__key--active");
+                });
+                break;
+
+            case "caps":
+                keyEl.classList.add("keyboard__key--wide");
+                keyEl.innerHTML = createKeyIcons("keybord_return");
+                keyEl.addEventListener("click", () => {
+                    addText("/n")
+                });
+                break;
+
+            case "space":
+                keyEl.classList.add("keyboard__key--extra-wide");
+                keyEl.innerHTML = createKeyIcons("space_bar");
+                keyEl.addEventListener("click", () => {
+                    addText(" ")
+                });
+                break;
+
+            case "done":
+                keyEl.classList.add("keyboard__key--wide");
+                keyEl.innerHTML = createKeyIcons("check_circle");
+                keyEl.addEventListener("click", () => {
+//----------NEED TO ADD FOO!!!!
+                });
+                break;
+            
+            default:
+                keyEl.classList.add("keyboard__key");
+                keyEl.textContent = key.toLowerCase();
+                keyEl.addEventListener("click", () => {
+                    addText(key);
+                });
+                break;  
+        }
+        
+        fragment.appendChild(keyEl);
+        if(insertLineBreak) {
+            fragment.appendChild(document.createElement('br'));
         }
     })
+    document.querySelector('.keyboard__keys').appendChild(fragment);
+    
+    return capsLock = document.querySelector('#caps_lock'); // -------------------- Fix IT!
 }
-
