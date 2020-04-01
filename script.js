@@ -49,17 +49,18 @@ function createKeyIcons(icon_name) {
 function createKeys() { //---------------------- ADD CAPS STATUS????
     const fragment = document.createDocumentFragment();
     const keyLayout = [
-        "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "backspace",
-        "q", "w", "e", "r", "t", "y", "u", "i", "o", "p",
-        "caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", "enter",
-        "done", "z", "x", "c", "v", "b", "n", "m", ",", ".", "?",
-        "space"
+        "esc",   "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", 
+        "~", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+", "backspace",
+        "tab", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "{", "}", "\\",
+        "caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", ":", "\"", "enter",
+        "shift","done", "z", "x", "c", "v", "b", "n", "m", ",", ".", "?", "Rshift",
+         "ctrl", "win", "alt", "space", "alt", "win","ctrl"
     ];
 
     keyLayout.forEach(key =>{
         const keyEl = document.createElement("button");
-        const insertLineBreak = ["backspace", "p", "enter", "?"].indexOf(key) !== -1;
-        console.log(insertLineBreak)
+        const insertLineBreak = ["F12", "backspace", "\\", "enter", "Rshift"].indexOf(key) !== -1;
+        const addSlimClass = ["esc", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12",];
         keyEl.setAttribute("type", "button");
         keyEl.classList.add("keyboard__key");
 
@@ -115,15 +116,20 @@ function createKeys() { //---------------------- ADD CAPS STATUS????
                 keyEl.addEventListener("click", () => {
                     addText(key);
                 });
+                
+                if(addSlimClass.includes(key)) {
+                    keyEl.classList.add("keyboard__key--slim");
+                }
                 break;  
         }
+
         
         fragment.appendChild(keyEl);
         if(insertLineBreak) {
             fragment.appendChild(document.createElement('br'));
         }
     })
-    document.querySelector('.keyboard__keys').appendChild(fragment);
+    document.querySelector('.keyboard__keys').appendChild(fragment); // add object
     
     return capsLock = document.querySelector('#caps_lock'); // -------------------- Fix IT!
 }

@@ -36,9 +36,9 @@
 
 .keyboard__key {
     margin: 3px;
-    width: 6%;
+    width: 5%;
     max-width: 90px;
-    height: 45px;
+    height: 40px;
     border-radius: 4px;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
@@ -57,9 +57,23 @@
     -webkit-tap-highlight-color: transparent;
 }
 
+.keyboard__key:first-child {
+    margin-right: 5%;
+}
+
 .keyboard__key:active {
     background: rgba(255,255,255, 0.12);
 
+}
+
+.keyboard__key--slim{
+    height: 6%;
+    margin-bottom: 10px;
+}
+
+.keyboard__key--slim:nth-child(6),
+.keyboard__key--slim:nth-child(10){
+    margin-left: 20px;
 }
 
 .keyboard__key--wide {
