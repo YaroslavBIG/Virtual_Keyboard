@@ -46,7 +46,7 @@ function createKeyIcons(icon_name) {
     return `<i class="material-icons">${icon_name}</i>`
 }
 
-function createKeys() {
+function createKeys() { //---------------------- ADD CAPS STATUS????
     const fragment = document.createDocumentFragment();
     const keyLayout = [
         "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "backspace",
@@ -127,3 +127,4 @@ function createKeys() {
     
     return capsLock = document.querySelector('#caps_lock'); // -------------------- Fix IT!
 }
+createKeys()
