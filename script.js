@@ -78,7 +78,7 @@ function createKeys() { //---------------------- ADD CAPS STATUS????
             case "caps":
                 keyEl.classList.add("keyboard__key--wide", "keyboard__key--inactive");
                 keyEl.id = "caps_lock"
-                keyEl.innerHTML = createKeyIcons("keybord_capslock");
+                keyEl.innerHTML = createKeyIcons("keyboard_capslock");
                 keyEl.addEventListener("click", () => {
                     keyEl.classList.toggle("keyboard__key--inactive");
                     keyEl.classList.toggle("keyboard__key--active");
