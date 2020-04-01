@@ -51,15 +51,15 @@ function createKeys() { //---------------------- ADD CAPS STATUS????
     const keyLayout = [
         "esc",   "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", 
         "~", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+", "backspace",
-        "tab", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "{", "}", "\\",
+        "tab", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "{", "}", "\\", "del",
         "caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", ":", "\"", "enter",
-        "shift","done", "z", "x", "c", "v", "b", "n", "m", ",", ".", "?", "Rshift",
-         "ctrl", "win", "alt", "space", "alt", "win","ctrl"
+        "shift","done", "z", "x", "c", "v", "b", "n", "m", ",", ".", "up","Rshift",
+         "ctrl", "win", "alt", "space", "alt", "left", "down", "right","ctrl"
     ];
 
     keyLayout.forEach(key =>{
         const keyEl = document.createElement("button");
-        const insertLineBreak = ["F12", "backspace", "\\", "enter", "Rshift"].indexOf(key) !== -1;
+        const insertLineBreak = ["F12", "backspace", "del", "enter", "Rshift"].indexOf(key) !== -1;
         const addSlimClass = ["esc", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12",];
         keyEl.setAttribute("type", "button");
         keyEl.classList.add("keyboard__key");
@@ -74,6 +74,13 @@ function createKeys() { //---------------------- ADD CAPS STATUS????
                 keyEl.addEventListener("keydown", () => {
                     while(true) {backspace()};
                 });
+                break;
+
+            case "tab":
+                keyEl.innerHTML = createKeyIcons("keyboard_tab");
+                // keyEl.addEventListener("click", () => {
+                //     addText(" ")
+                // });
                 break;
                
             case "caps":
@@ -102,8 +109,37 @@ function createKeys() { //---------------------- ADD CAPS STATUS????
                 });
                 break;
 
+            case "up":
+                keyEl.innerHTML = createKeyIcons("keyboard_arrow_up");
+                // keyEl.addEventListener("click", () => {
+                //     addText(" ")
+                // });
+                break;
+
+            case "down":
+                keyEl.innerHTML = createKeyIcons("keyboard_arrow_down");
+                // keyEl.addEventListener("click", () => {
+                //     addText(" ")
+                // });
+                break;    
+            
+            case "left":
+                keyEl.innerHTML = createKeyIcons("keyboard_arrow_left");
+                // keyEl.addEventListener("click", () => {
+                //     addText(" ")
+                // });
+                break;    
+            
+            case "right":
+                keyEl.innerHTML = createKeyIcons("keyboard_arrow_right");
+                // keyEl.addEventListener("click", () => {
+                //     addText(" ")
+                // });
+                break;
+
+    
             case "done":
-                keyEl.classList.add("keyboard__key--wide");
+                //keyEl.classList.add("keyboard__key--wide");
                 keyEl.innerHTML = createKeyIcons("check_circle");
                 keyEl.addEventListener("click", () => {
 //----------NEED TO ADD FOO!!!!
