@@ -14,6 +14,7 @@ function addInput() {
 }
 
 addInput();
+let capsLockStatus = false;
 
 function addKeybord() {
   const keyboard = document.createElement('div');
@@ -88,6 +89,7 @@ function createKeys() { // ---------------------- ADD CAPS STATUS????
         keyEl.addEventListener('click', () => {
           keyEl.classList.toggle('keyboard__key--inactive');
           keyEl.classList.toggle('keyboard__key--active');
+          toggleCapsLock();
         });
         break;
 
@@ -170,8 +172,20 @@ function createKeys() { // ---------------------- ADD CAPS STATUS????
 createKeys();
 
 const keyboard = document.querySelector('.keyboard');
-
 const keys = keyboard.querySelectorAll('.keyboard__key')
+
+const toggleCapsLock = () => {
+  const specialKeys = ['esc', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12',
+    'backspace', 'tab', 'del', 'caps','enter', 'shift', 'done', 'up', 'rshift', 'ctrl', 'win', 'alt', 'space',
+    'alt', 'left', 'down', 'right']
+  capsLockStatus = capsLockStatus ? false : true  
+  keys.forEach( key => {
+      console.log(key.textContent)
+      if (key.childElementCount === 0 && !specialKeys.includes(key.textContent)) {
+          key.textContent = capsLockStatus ? key.textContent.toUpperCase() : key.textContent.toLowerCase();
+      }
+  });
+};
 
 keyboard.addEventListener('click', (event) => {
   console.log(event.target);
