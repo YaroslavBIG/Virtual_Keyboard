@@ -55,13 +55,13 @@ function createKeys() { // ---------------------- ADD CAPS STATUS????
     '~', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '+', 'backspace',
     'tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '{', '}', '\\', 'del',
     'caps', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ':', '"', 'enter',
-    'shift', 'done', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', 'up', 'Rshift',
-    'ctrl', 'win', 'alt', 'space', 'alt', 'left', 'down', 'right', 'ctrl',
+    'lshift', 'done', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', 'up', 'rshift',
+    'ctrl', 'win', 'alt', 'space', 'altgr', 'left', 'down', 'right', 'ctrl',
   ];
 
   keyLayout.forEach((key) => {
     const keyEl = document.createElement('button');
-    const insertLineBreak = ['F12', 'backspace', 'del', 'enter', 'Rshift'].indexOf(key) !== -1;
+    const insertLineBreak = ['F12', 'backspace', 'del', 'enter', 'rshift'].indexOf(key) !== -1;
     const addSlimClass = ['esc', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12'];
     keyEl.setAttribute('type', 'button');
     keyEl.classList.add('keyboard__key');
@@ -77,9 +77,9 @@ function createKeys() { // ---------------------- ADD CAPS STATUS????
 
       case 'tab':
         keyEl.innerHTML = createKeyIcons('keyboard_tab');
-        // keyEl.addEventListener("click", () => {
-        //     addText(" ")
-        // });
+        keyEl.addEventListener("click", () => {
+            addText("    ")
+        });
         break;
 
       case 'caps':
@@ -176,8 +176,8 @@ const keys = keyboard.querySelectorAll('.keyboard__key')
 
 const toggleCapsLock = () => {
   const specialKeys = ['esc', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12',
-    'backspace', 'tab', 'del', 'caps','enter', 'shift', 'done', 'up', 'rshift', 'ctrl', 'win', 'alt', 'space',
-    'alt', 'left', 'down', 'right']
+    'backspace', 'tab', 'del', 'caps','enter', 'lshift', 'done', 'up', 'rshift', 'ctrl', 'win', 'alt', 'space',
+    'altgr', 'left', 'down', 'right']
   capsLockStatus = capsLockStatus ? false : true  
   keys.forEach( key => {
       if (key.childElementCount === 0 && !specialKeys.includes(key.textContent)) {
@@ -186,10 +186,23 @@ const toggleCapsLock = () => {
   });
 };
 
-document.addEventListener('keydown', (event) => {
+window.addEventListener('keydown', (event) => {
+  
   const currentKeyDown = event.key.toLocaleLowerCase();
+  const currentKeyDownCode = event.code.toLocaleLowerCase();
+  console.log(currentKeyDownCode)
   keys.forEach(el => {
-    if(el.innerText === currentKeyDown) {
+    const key = el.innerText;
+    if(key === 'esc' && currentKeyDown === 'escape'){
+      el.classList.add('keyboard__key--pressed')
+    }
+    if(key === 'lshift' && currentKeyDownCode === 'shiftleft'){
+      el.classList.add('keyboard__key--pressed')
+    }
+    if(key === 'rshift' && currentKeyDownCode === 'shiftright'){
+      el.classList.add('keyboard__key--pressed')
+    }
+    if(key === currentKeyDown) {
       el.classList.add('keyboard__key--pressed')
       console.log("match Down")
     }
@@ -198,7 +211,18 @@ document.addEventListener('keydown', (event) => {
 
 document.addEventListener('keyup', (event) => {
   const currentKeyUp = event.key.toLocaleLowerCase();
+  const currentKeyUpCode = event.code.toLocaleLowerCase();
   keys.forEach(el => {
+    const key = el.innerText;
+    if(key === 'esc' && currentKeyUp === 'escape'){
+      el.classList.remove('keyboard__key--pressed')
+    }
+    if(key === 'lshift' && currentKeyUpCode === 'shiftleft'){
+      el.classList.remove('keyboard__key--pressed')
+    }
+    if(key === 'rshift' && currentKeyUpCode === 'shiftright'){
+      el.classList.remove('keyboard__key--pressed')
+    }
     if(el.innerText === currentKeyUp) {
       el.classList.remove('keyboard__key--pressed')
       console.log("match UP")
