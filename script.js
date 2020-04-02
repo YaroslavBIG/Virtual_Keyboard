@@ -186,7 +186,22 @@ const toggleCapsLock = () => {
   });
 };
 
-document.addEventListener('keypress', (event) => {
-  console.log(event.key);
+document.addEventListener('keydown', (event) => {
+  const currentKeyDown = event.key.toLocaleLowerCase();
+  keys.forEach(el => {
+    if(el.innerText === currentKeyDown) {
+      el.classList.add('keyboard__key--pressed')
+      console.log("match Down")
+    }
+  });
 });
 
+document.addEventListener('keyup', (event) => {
+  const currentKeyUp = event.key.toLocaleLowerCase();
+  keys.forEach(el => {
+    if(el.innerText === currentKeyUp) {
+      el.classList.remove('keyboard__key--pressed')
+      console.log("match UP")
+    }
+  });
+});
