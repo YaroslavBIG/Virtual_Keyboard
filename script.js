@@ -35,7 +35,7 @@ const isActive = (el) => Boolean(el.classList.contains('keyboard__key--active'))
 const textArea = document.querySelector('.input_board');
 
 function addText(text) {
-  textArea.value += isActive(capsLock) && text[0] !== '\\' ? `${text.toUpperCase()}` : `${text}`;
+  textArea.value += isActive(capsLock) ? `${text.toUpperCase()}` : `${text}`;
 }
 // Backspace
 const backspace = () => textArea.value = textArea.value.substring(0, textArea.value.length - 1);
@@ -97,7 +97,7 @@ function createKeys() { // ---------------------- ADD CAPS STATUS????
         keyEl.classList.add('keyboard__key--wide');
         keyEl.innerHTML = createKeyIcons('keyboard_return');
         keyEl.addEventListener('click', () => {
-          addText('/n');
+          addText('\n');
         });
         break;
 
@@ -180,14 +180,13 @@ const toggleCapsLock = () => {
     'alt', 'left', 'down', 'right']
   capsLockStatus = capsLockStatus ? false : true  
   keys.forEach( key => {
-      console.log(key.textContent)
       if (key.childElementCount === 0 && !specialKeys.includes(key.textContent)) {
           key.textContent = capsLockStatus ? key.textContent.toUpperCase() : key.textContent.toLowerCase();
       }
   });
 };
 
-keyboard.addEventListener('click', (event) => {
-  console.log(event.target);
+document.addEventListener('keypress', (event) => {
+  console.log(event.key);
 });
 
