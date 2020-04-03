@@ -8,6 +8,7 @@ function addInput() {
 
   const inputBoard = document.createElement('textarea');
   inputBoard.classList.add('input_board');
+  inputBoard.setAttribute('autofocus', 'autofocus')
   document.body.append(caption);
   document.body.querySelector('.caption').append(captionText);
   document.body.append(inputBoard);
@@ -58,6 +59,30 @@ function createKeys() { // ---------------------- ADD CAPS STATUS????
     'lshift', 'done', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', 'up', 'rshift',
     'ctrl', 'win', 'alt', 'space', 'altgr', 'left', 'down', 'right', 'ctrl',
   ];
+
+  const editCarretPos = (direction) => {
+    const currentPosCarret = textArea.selectionEnd;
+    const posMinus = () => {
+      console.log(currentPosCarret)
+      textArea.focus()
+      textArea.setSelectionRange(currentPosCarret - 1, currentPosCarret - 1);
+      textArea.focus()
+    }
+    const posPlus = () => {
+      console.log(currentPosCarret)
+      textArea.focus()
+      textArea.setSelectionRange(currentPosCarret + 1, currentPosCarret + 1);
+      textArea.focus()
+    }
+    switch (direction) {
+      case 'left':
+        posMinus();
+        break;
+      case 'right':
+        posPlus();
+        break;
+    }
+  }
 
   keyLayout.forEach((key) => {
     const keyEl = document.createElement('button');
@@ -125,16 +150,19 @@ function createKeys() { // ---------------------- ADD CAPS STATUS????
 
       case 'left':
         keyEl.innerHTML = createKeyIcons('keyboard_arrow_left');
-        // keyEl.addEventListener("click", () => {
-        //     addText(" ")
-        // });
+        keyEl.addEventListener("click", () => {
+          textArea.focus()
+          editCarretPos('left')
+          
+        });
         break;
 
       case 'right':
         keyEl.innerHTML = createKeyIcons('keyboard_arrow_right');
-        // keyEl.addEventListener("click", () => {
-        //     addText(" ")
-        // });
+        keyEl.addEventListener("click", () => {
+          textArea.focus()
+          editCarretPos('right')
+        });
         break;
 
 
@@ -190,7 +218,7 @@ window.addEventListener('keydown', (event) => {
   
   const currentKeyDown = event.key.toLocaleLowerCase();
   const currentKeyDownCode = event.code.toLocaleLowerCase();
-  console.log(currentKeyDownCode)
+ // console.log(currentKeyDownCode)
   keys.forEach(el => {
     const key = el.innerText;
     if(key === 'esc' && currentKeyDown === 'escape'){
@@ -204,7 +232,7 @@ window.addEventListener('keydown', (event) => {
     }
     if(key === currentKeyDown) {
       el.classList.add('keyboard__key--pressed')
-      console.log("match Down")
+     // console.log("match Down")
     }
   });
 });
@@ -225,7 +253,14 @@ document.addEventListener('keyup', (event) => {
     }
     if(el.innerText === currentKeyUp) {
       el.classList.remove('keyboard__key--pressed')
-      console.log("match UP")
+     // console.log("match UP")
     }
   });
 });
+
+
+
+// textArea.selectionStart = 5
+// 5
+// textArea.selectionEnd = 5
+// 5
