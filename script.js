@@ -55,14 +55,23 @@ const backspace = () => {
   const selectStart = textArea.selectionStart
   const textLength = textArea.value.length;
   
-  if(textArea.value.length !== selectStart) {
+  if(textArea.value.length !== selectStart && caretPosition === selectStart) {
+    const textBeforeCaret = textArea.value.slice(0, selectStart - 1);
+    const textAfterCaret = textArea.value.slice(caretPosition, textLength);
+    textArea.value = `${textBeforeCaret}${textAfterCaret}`
+    textArea.setSelectionRange(selectStart - 1, selectStart - 1)
+  }
+  if(caretPosition !== selectStart){
     const textBeforeCaret = textArea.value.slice(0, selectStart);
     const textAfterCaret = textArea.value.slice(caretPosition, textLength);
     textArea.value = `${textBeforeCaret}${textAfterCaret}`
+    textArea.setSelectionRange(selectStart, selectStart)
   }
-  else{
+  if(caretPosition === textLength){
     textArea.value = textArea.value.substring(0, textArea.value.length - 1);
+    textArea.setSelectionRange(selectStart - 1, selectStart - 1)
   }
+ 
   textArea.focus();
 }
 
@@ -71,14 +80,20 @@ const del = () => {
   const selectStart = textArea.selectionStart
   const textLength = textArea.value.length;
   
-  if(textArea.value.length !== selectStart) {
+  if(textArea.value.length !== selectStart && caretPosition === selectStart) {
+    const textBeforeCaret = textArea.value.slice(0, selectStart);
+    const symbSliceAfter = caretPosition + 1;
+    const textAfterCaret = textArea.value.slice(symbSliceAfter, textLength);
+    textArea.value = `${textBeforeCaret}${textAfterCaret}`
+    
+  }
+  if(caretPosition !== selectStart){
     const textBeforeCaret = textArea.value.slice(0, selectStart);
     const textAfterCaret = textArea.value.slice(caretPosition, textLength);
     textArea.value = `${textBeforeCaret}${textAfterCaret}`
+    textArea.setSelectionRange(selectStart, selectStart)
   }
-  else{
-    //textArea.value = textArea.value.substring(0, textArea.value.length - 1);
-  }
+  textArea.setSelectionRange(selectStart, selectStart)
   textArea.focus();
 }
 // Clear text Area
@@ -284,6 +299,14 @@ function createKeys() {
         keyEl.textContent = key.toLowerCase();
       break;
 
+      case 'del':
+        keyEl.classList.add('keyboard__key')
+        keyEl.textContent = key.toLowerCase();
+        keyEl.addEventListener('click', () => {
+          del()
+         });
+      break;
+
       default:
         keyEl.classList.add('keyboard__key');
         keyEl.textContent = key.toLowerCase();
@@ -338,7 +361,7 @@ textArea.addEventListener('keydown', (event) => {
   const currentKeyDownCode = event.code.toLocaleLowerCase();
   //console.log(event.keyCode);
   const pressedKey = keyCode.indexOf(event.keyCode);
-  console.log('KEY DOWN', keyLayout[pressedKey]);
+ // console.log('KEY DOWN', keyLayout[pressedKey]);
   const keyPressedCurrentValue = keyLayout[pressedKey];
   
   //keyCode.push(event.keyCode);
@@ -359,11 +382,13 @@ textArea.addEventListener('keydown', (event) => {
       el.classList.add('keyboard__key--pressed')
     }
     else if(key === 'backspace' && keyPressedCurrentValue === 'backspace') {
+      event.preventDefault();
       el.classList.add('keyboard__key--pressed')
-      backspace()
+      backspace();
     }
-    if(key === 'del' && keyPressedCurrentValue === 'del') {
-      console.log('del')
+    else if(key === 'del' && keyPressedCurrentValue === 'del') {
+      event.preventDefault();
+      el.classList.add('keyboard__key--pressed')
       del()
     }
     else if (key === currentKeyDown) {
@@ -379,7 +404,7 @@ textArea.addEventListener('keydown', (event) => {
 textArea.addEventListener('keypress', (event) => {
   const currentKeyUp = event.key.toLocaleLowerCase();
   const currentKeyUpCode = event.code.toLocaleLowerCase();
-  console.log('KEYpRESS', currentKeyUp)
+ // console.log('KEYpRESS', currentKeyUp)
   // KeyboardEvent.shiftKey  !!!!!!!!!!!!!!!!!
   const pressedKey = keyCode.indexOf(event.keyCode);
   const keyPressedCurrentValue = keyLayout[pressedKey];
@@ -413,12 +438,11 @@ textArea.addEventListener('keyup', (event) => {
   const keyPressedCurrentValue = keyLayout[pressedKey];
   const currentKeyDown = event.key.toLocaleLowerCase();
   const currentKeyDownCode = event.code.toLocaleLowerCase();
-  console.log('keyUP', currentKeyDown)
+ // console.log('keyUP', currentKeyDown)
   event.preventDefault();
   keys.forEach((el) => {
     const key = el.innerText;
-    el.classList.remove('keyboard__key--pressed')
-  });
+    el.classList.remove('keyboard__key--pressed')});
 });
 const keyboard = document.querySelector('.keyboard__keys');
 keyboard.addEventListener('mousedown', (event) => {
