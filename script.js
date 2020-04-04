@@ -46,6 +46,8 @@ function addText(text) {
     const textAfterCaret = textArea.value.slice(caretPosition,textArea.value.length);
     const textBeforeCaret = textArea.value.slice(0, caretPosition);
     textArea.value = isActive(capsLock) ? `${textBeforeCaret}${text.toUpperCase()}${textAfterCaret.toUpperCase()}` : `${textBeforeCaret}${text}${textAfterCaret}`;
+    const carretPositionAfter = caretPosition + text.length;
+    textArea.setSelectionRange(carretPositionAfter, carretPositionAfter)
   }
   textArea.focus();
 }
@@ -227,8 +229,6 @@ function createKeys() {
         keyEl.id = 'caps_lock';
         keyEl.innerHTML = createKeyIcons('keyboard_capslock');
         keyEl.addEventListener('click', () => {
-          keyEl.classList.toggle('keyboard__key--inactive');
-          keyEl.classList.toggle('keyboard__key--active');
           toggleCapsLock();
         });
         break;
@@ -340,6 +340,9 @@ const keyboard = document.querySelector('.keyboard__keys');
 
 const toggleCapsLock = () => {
   capsLockStatus = !capsLockStatus;
+  const caps = document.querySelector('#caps_lock')
+  caps.classList.toggle('keyboard__key--inactive');
+  caps.classList.toggle('keyboard__key--active');
   const keys = keyboard.querySelectorAll('.keyboard__key');
   keys.forEach((key) => {
     if (key.childElementCount === 0 && !specialKeys.includes(key.textContent)) {
@@ -361,14 +364,14 @@ textArea.addEventListener('keydown', (event) => {
   const currentKeyDownCode = event.code.toLocaleLowerCase();
   //console.log(event.keyCode);
   const pressedKey = keyCode.indexOf(event.keyCode);
- // console.log('KEY DOWN', keyLayout[pressedKey]);
+  console.log('KEY DOWN', keyLayout[pressedKey]);
   const keyPressedCurrentValue = keyLayout[pressedKey];
   
   //keyCode.push(event.keyCode);
   //console.log(keyPressedCurrentValue)
   
   keys.forEach((el) => {
-    const key = el.innerText;
+    const key = el.hasChildNodes() ? el.firstChild.innerText : el.innerText;
     if (key === 'esc' && currentKeyDown === 'escape') {
       el.classList.add('keyboard__key--pressed');
     }
@@ -378,8 +381,10 @@ textArea.addEventListener('keydown', (event) => {
     else if (key === 'rshift' && currentKeyDownCode === 'shiftright') {
       el.classList.add('keyboard__key--pressed');
     }
-    else if(key === 'caps' && keyPressedCurrentValue === 'caps') {
+    else if(key === 'keyboard_capslock' && keyPressedCurrentValue === 'caps') {
+      event.preventDefault();
       el.classList.add('keyboard__key--pressed')
+      toggleCapsLock()
     }
     else if(key === 'backspace' && keyPressedCurrentValue === 'backspace') {
       event.preventDefault();
@@ -391,7 +396,7 @@ textArea.addEventListener('keydown', (event) => {
       el.classList.add('keyboard__key--pressed')
       del()
     }
-    else if (key === currentKeyDown) {
+    else if (key === keyPressedCurrentValue) {
       el.classList.add('keyboard__key--pressed');
       addText(keyPressedCurrentValue)
     }
