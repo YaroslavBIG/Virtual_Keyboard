@@ -50,8 +50,21 @@ function addText(text) {
   textArea.focus();
 }
 // Backspace
-const backspace = () => textArea.value = textArea.value.substring(0, textArea.value.length - 1);
-
+const backspace = () => {
+  const caretPosition = textArea.selectionEnd
+  const selectStart = textArea.selectionStart
+  const textLength = textArea.value.length;
+  
+  if(textArea.value.length !== selectStart) {
+    const textBeforeCaret = textArea.value.slice(0, selectStart);
+    const textAfterCaret = textArea.value.slice(caretPosition, textLength);
+    textArea.value = `${textBeforeCaret}${textAfterCaret}`
+  }
+  else{
+    textArea.value = textArea.value.substring(0, textArea.value.length - 1);
+  }
+  textArea.focus();
+}
 // Clear text Area
 const clearTextArea = () => textArea.value = '';
 
