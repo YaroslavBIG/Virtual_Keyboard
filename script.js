@@ -8,7 +8,7 @@ function addInput() {
 
   const inputBoard = document.createElement('textarea');
   inputBoard.classList.add('input_board');
-  inputBoard.setAttribute('autofocus', 'autofocus')
+  inputBoard.setAttribute('autofocus', 'autofocus');
   document.body.append(caption);
   document.body.querySelector('.caption').append(captionText);
   document.body.append(inputBoard);
@@ -44,36 +44,66 @@ const backspace = () => textArea.value = textArea.value.substring(0, textArea.va
 // Clear text Area
 // const clearTextArea = () => textArea.value = '';
 
-
 function createKeyIcons(iconName) {
   return `<i class="material-icons">${iconName}</i>`;
 }
 
-function createKeys() { // ---------------------- ADD CAPS STATUS????
+let keyLang = 'en';
+let shiftPress = false;
+
+function createKeys() {
   const fragment = document.createDocumentFragment();
-  const keyLayout = [
+  const keyLayoutEn = [
     'esc', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12',
-    '~', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '+', 'backspace',
-    'tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '{', '}', '\\', 'del',
-    'caps', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ':', '"', 'enter',
+    '`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'backspace',
+    'tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\', 'del',
+    'caps', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', 'enter',
     'lshift', 'done', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', 'up', 'rshift',
     'ctrl', 'win', 'alt', 'space', 'altgr', 'left', 'down', 'right', 'ctrl',
   ];
 
+  const keyLayoutRu = [
+    'esc', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12',
+    'ё', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'backspace',
+    'tab', 'й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ', '\\', 'del',
+    'caps', 'ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э', 'enter',
+    'lshift', 'done', 'я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю', 'up', 'rshift',
+    'ctrl', 'win', 'alt', 'space', 'altgr', 'left', 'down', 'right', 'ctrl',
+  ];
+
+  const keyLayoutSymRu = [
+    'esc', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12',
+    'ё', '!', '"', '№', ';', '%', ':', '?', '*', '(', ')', '_', '+', 'backspace',
+    'tab', 'й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ', '|', 'del',
+    'caps', 'ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э', 'enter',
+    'lshift', 'done', 'я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю', 'up', 'rshift',
+    'ctrl', 'win', 'alt', 'space', 'altgr', 'left', 'down', 'right', 'ctrl',
+  ];
+
+  const keyLayoutSymEn = [
+    'esc', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12',
+    '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', 'backspace',
+    'tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '{', '}', '|', 'del',
+    'caps', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ':', '"', 'enter',
+    'lshift', 'done', 'z', 'x', 'c', 'v', 'b', 'n', 'm', '<', '>', 'up', 'rshift',
+    'ctrl', 'win', 'alt', 'space', 'altgr', 'left', 'down', 'right', 'ctrl',
+  ];
+
+
   const editCarretPos = (direction) => {
     const currentPosCarret = textArea.selectionEnd;
     const posMinus = () => {
-      console.log(currentPosCarret)
-      textArea.focus()
+      console.log(currentPosCarret);
+      textArea.focus();
       textArea.setSelectionRange(currentPosCarret - 1, currentPosCarret - 1);
-      textArea.focus()
-    }
+      textArea.focus();
+    };
     const posPlus = () => {
-      console.log(currentPosCarret)
-      textArea.focus()
+      console.log(currentPosCarret);
+      textArea.focus();
       textArea.setSelectionRange(currentPosCarret + 1, currentPosCarret + 1);
-      textArea.focus()
-    }
+      textArea.focus();
+    };
     switch (direction) {
       case 'left':
         posMinus();
@@ -82,9 +112,9 @@ function createKeys() { // ---------------------- ADD CAPS STATUS????
         posPlus();
         break;
     }
-  }
+  };
 
-  keyLayout.forEach((key) => {
+  keyLayoutEn.forEach((key) => {
     const keyEl = document.createElement('button');
     const insertLineBreak = ['F12', 'backspace', 'del', 'enter', 'rshift'].indexOf(key) !== -1;
     const addSlimClass = ['esc', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12'];
@@ -102,8 +132,8 @@ function createKeys() { // ---------------------- ADD CAPS STATUS????
 
       case 'tab':
         keyEl.innerHTML = createKeyIcons('keyboard_tab');
-        keyEl.addEventListener("click", () => {
-            addText("    ")
+        keyEl.addEventListener('click', () => {
+          addText('    ');
         });
         break;
 
@@ -150,18 +180,17 @@ function createKeys() { // ---------------------- ADD CAPS STATUS????
 
       case 'left':
         keyEl.innerHTML = createKeyIcons('keyboard_arrow_left');
-        keyEl.addEventListener("click", () => {
-          textArea.focus()
-          editCarretPos('left')
-          
+        keyEl.addEventListener('click', () => {
+          textArea.focus();
+          editCarretPos('left');
         });
         break;
 
       case 'right':
         keyEl.innerHTML = createKeyIcons('keyboard_arrow_right');
-        keyEl.addEventListener("click", () => {
-          textArea.focus()
-          editCarretPos('right')
+        keyEl.addEventListener('click', () => {
+          textArea.focus();
+          editCarretPos('right');
         });
         break;
 
@@ -200,39 +229,38 @@ function createKeys() { // ---------------------- ADD CAPS STATUS????
 createKeys();
 
 const keyboard = document.querySelector('.keyboard');
-const keys = keyboard.querySelectorAll('.keyboard__key')
+const keys = keyboard.querySelectorAll('.keyboard__key');
 
 const toggleCapsLock = () => {
   const specialKeys = ['esc', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12',
-    'backspace', 'tab', 'del', 'caps','enter', 'lshift', 'done', 'up', 'rshift', 'ctrl', 'win', 'alt', 'space',
-    'altgr', 'left', 'down', 'right']
-  capsLockStatus = capsLockStatus ? false : true  
-  keys.forEach( key => {
-      if (key.childElementCount === 0 && !specialKeys.includes(key.textContent)) {
-          key.textContent = capsLockStatus ? key.textContent.toUpperCase() : key.textContent.toLowerCase();
-      }
+    'backspace', 'tab', 'del', 'caps', 'enter', 'lshift', 'done', 'up', 'rshift', 'ctrl', 'win', 'alt', 'space',
+    'altgr', 'left', 'down', 'right'];
+  capsLockStatus = !capsLockStatus;
+  keys.forEach((key) => {
+    if (key.childElementCount === 0 && !specialKeys.includes(key.textContent)) {
+      key.textContent = capsLockStatus ? key.textContent.toUpperCase() : key.textContent.toLowerCase();
+    }
   });
 };
 
 window.addEventListener('keydown', (event) => {
-  
   const currentKeyDown = event.key.toLocaleLowerCase();
   const currentKeyDownCode = event.code.toLocaleLowerCase();
- // console.log(currentKeyDownCode)
-  keys.forEach(el => {
+  // console.log(currentKeyDownCode)
+  keys.forEach((el) => {
     const key = el.innerText;
-    if(key === 'esc' && currentKeyDown === 'escape'){
-      el.classList.add('keyboard__key--pressed')
+    if (key === 'esc' && currentKeyDown === 'escape') {
+      el.classList.add('keyboard__key--pressed');
     }
-    if(key === 'lshift' && currentKeyDownCode === 'shiftleft'){
-      el.classList.add('keyboard__key--pressed')
+    if (key === 'lshift' && currentKeyDownCode === 'shiftleft') {
+      el.classList.add('keyboard__key--pressed');
     }
-    if(key === 'rshift' && currentKeyDownCode === 'shiftright'){
-      el.classList.add('keyboard__key--pressed')
+    if (key === 'rshift' && currentKeyDownCode === 'shiftright') {
+      el.classList.add('keyboard__key--pressed');
     }
-    if(key === currentKeyDown) {
-      el.classList.add('keyboard__key--pressed')
-     // console.log("match Down")
+    if (key === currentKeyDown) {
+      el.classList.add('keyboard__key--pressed');
+      // console.log("match Down")
     }
   });
 });
@@ -240,24 +268,23 @@ window.addEventListener('keydown', (event) => {
 document.addEventListener('keyup', (event) => {
   const currentKeyUp = event.key.toLocaleLowerCase();
   const currentKeyUpCode = event.code.toLocaleLowerCase();
-  keys.forEach(el => {
+  keys.forEach((el) => {
     const key = el.innerText;
-    if(key === 'esc' && currentKeyUp === 'escape'){
-      el.classList.remove('keyboard__key--pressed')
+    if (key === 'esc' && currentKeyUp === 'escape') {
+      el.classList.remove('keyboard__key--pressed');
     }
-    if(key === 'lshift' && currentKeyUpCode === 'shiftleft'){
-      el.classList.remove('keyboard__key--pressed')
+    if (key === 'lshift' && currentKeyUpCode === 'shiftleft') {
+      el.classList.remove('keyboard__key--pressed');
     }
-    if(key === 'rshift' && currentKeyUpCode === 'shiftright'){
-      el.classList.remove('keyboard__key--pressed')
+    if (key === 'rshift' && currentKeyUpCode === 'shiftright') {
+      el.classList.remove('keyboard__key--pressed');
     }
-    if(el.innerText === currentKeyUp) {
-      el.classList.remove('keyboard__key--pressed')
-     // console.log("match UP")
+    if (el.innerText === currentKeyUp) {
+      el.classList.remove('keyboard__key--pressed');
+      // console.log("match UP")
     }
   });
 });
-
 
 
 // textArea.selectionStart = 5
