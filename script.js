@@ -65,6 +65,22 @@ const backspace = () => {
   }
   textArea.focus();
 }
+
+const del = () => {
+  const caretPosition = textArea.selectionEnd
+  const selectStart = textArea.selectionStart
+  const textLength = textArea.value.length;
+  
+  if(textArea.value.length !== selectStart) {
+    const textBeforeCaret = textArea.value.slice(0, selectStart);
+    const textAfterCaret = textArea.value.slice(caretPosition, textLength);
+    textArea.value = `${textBeforeCaret}${textAfterCaret}`
+  }
+  else{
+    //textArea.value = textArea.value.substring(0, textArea.value.length - 1);
+  }
+  textArea.focus();
+}
 // Clear text Area
 const clearTextArea = () => textArea.value = '';
 
@@ -324,7 +340,7 @@ textArea.addEventListener('keydown', (event) => {
   const pressedKey = keyCode.indexOf(event.keyCode);
   console.log('KEY DOWN', keyLayout[pressedKey]);
   const keyPressedCurrentValue = keyLayout[pressedKey];
-  addText(keyPressedCurrentValue)
+  
   //keyCode.push(event.keyCode);
   //console.log(keyPressedCurrentValue)
   
@@ -346,8 +362,13 @@ textArea.addEventListener('keydown', (event) => {
       el.classList.add('keyboard__key--pressed')
       backspace()
     }
+    if(key === 'del' && keyPressedCurrentValue === 'del') {
+      console.log('del')
+      del()
+    }
     else if (key === currentKeyDown) {
       el.classList.add('keyboard__key--pressed');
+      addText(keyPressedCurrentValue)
     }
     
       // console.log("match Down")
@@ -360,7 +381,10 @@ textArea.addEventListener('keypress', (event) => {
   const currentKeyUpCode = event.code.toLocaleLowerCase();
   console.log('KEYpRESS', currentKeyUp)
   // KeyboardEvent.shiftKey  !!!!!!!!!!!!!!!!!
- /* keys.forEach((el) => {
+  const pressedKey = keyCode.indexOf(event.keyCode);
+  const keyPressedCurrentValue = keyLayout[pressedKey];
+  
+  /* keys.forEach((el) => {
     const key = el.innerText;
     if (key === 'esc' && currentKeyUp === 'escape') {
       event.repeat = false;
@@ -390,28 +414,11 @@ textArea.addEventListener('keyup', (event) => {
   const currentKeyDown = event.key.toLocaleLowerCase();
   const currentKeyDownCode = event.code.toLocaleLowerCase();
   console.log('keyUP', currentKeyDown)
-  
+  event.preventDefault();
   keys.forEach((el) => {
     const key = el.innerText;
-    if (key === 'esc' && currentKeyDown === 'escape') {
-      el.classList.remove('keyboard__key--pressed');
-    }
-    if (key === 'lshift' && currentKeyDownCode === 'shiftleft') {
-      el.classList.remove('keyboard__key--pressed');
-    }
-    if (key === 'rshift' && currentKeyDownCode === 'shiftright') {
-      el.classList.remove('keyboard__key--pressed');
-    }
-    if(key === 'caps' && keyPressedCurrentValue === 'caps') {
-      el.classList.remove('keyboard__key--pressed')
-    }
-    if (key === currentKeyDown) {
-      el.classList.remove('keyboard__key--pressed');
-    }
-    if(key === 'caps' && keyPressedCurrentValue === 'caps') {
-    el.classList.remove('keyboard__key--pressed')}
-    event.preventDefault();
-    });
+    el.classList.remove('keyboard__key--pressed')
+  });
 });
 const keyboard = document.querySelector('.keyboard__keys');
 keyboard.addEventListener('mousedown', (event) => {
