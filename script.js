@@ -16,7 +16,7 @@ function addInput() {
 
 addInput();
 let capsLockStatus = false;
-
+let shiftStatus = false;
 function addKeybord() {
   const keyboard = document.createElement('div');
   keyboard.classList.add('keyboard');
@@ -113,8 +113,26 @@ function createKeys() {
         break;
     }
   };
+  
+  let keyLayout;
 
-  keyLayoutEn.forEach((key) => {
+  if(keyLang === 'en' && shiftPress === false) {
+    keyLayout = keyLayoutEn;
+  }
+
+  if(keyLang === 'ru' && shiftPress === false){
+    keyLayout = keyLayoutRu;
+  }
+
+  if(keyLang === 'en' && shiftPress === true) {
+    keyLayout = keyLayoutSymEn;
+  }
+
+  if(keyLang === 'ru' && shiftPress === true){
+    keyLayout = keyLayoutSymRu;
+  }
+
+  keyLayout.forEach((key) => {
     const keyEl = document.createElement('button');
     const insertLineBreak = ['F12', 'backspace', 'del', 'enter', 'rshift'].indexOf(key) !== -1;
     const addSlimClass = ['esc', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12'];
@@ -193,13 +211,33 @@ function createKeys() {
           editCarretPos('right');
         });
         break;
-
-
+      
+      case 'lshift':
+        keyEl.classList.add('keyboard__key');
+        keyEl.textContent = key.toLowerCase();
+        keyEl.addEventListener('keydown', () => {
+          toggleShift()
+        });
+        keyEl.addEventListener('keyup', () => {
+          toggleShift()
+        });
+      
+      case 'rshift':
+        keyEl.classList.add('keyboard__key');
+        keyEl.textContent = key.toLowerCase();
+        keyEl.addEventListener('keydown', () => {
+          toggleShift()
+        });
+        keyEl.addEventListener('keyup', () => {
+          toggleShift()
+        });
+      
       case 'done':
         // keyEl.classList.add("keyboard__key--wide");
         keyEl.innerHTML = createKeyIcons('check_circle');
         keyEl.addEventListener('click', () => {
-          // ----------NEED TO ADD FOO!!!!
+         keyLang = keyLang === 'en' ? 'ru' : 'en';
+         createKeys()
         });
         break;
 
@@ -222,20 +260,24 @@ function createKeys() {
       fragment.appendChild(document.createElement('br'));
     }
   });
-  document.querySelector('.keyboard__keys').appendChild(fragment); // add object
-
+  const keyboard = document.querySelector('.keyboard__keys');
+  keyboard.innerHTML = ''
+  keyboard.appendChild(fragment); // add object
+  addEventListenerKeyLight()
   return capsLock = document.querySelector('#caps_lock'); // -------------------- Fix IT!
 }
 createKeys();
 
-const keyboard = document.querySelector('.keyboard');
-const keys = keyboard.querySelectorAll('.keyboard__key');
+const keyboard = document.querySelector('.keyboard__keys');
+
+
 
 const toggleCapsLock = () => {
   const specialKeys = ['esc', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12',
     'backspace', 'tab', 'del', 'caps', 'enter', 'lshift', 'done', 'up', 'rshift', 'ctrl', 'win', 'alt', 'space',
     'altgr', 'left', 'down', 'right'];
   capsLockStatus = !capsLockStatus;
+  const keys = keyboard.querySelectorAll('.keyboard__key');
   keys.forEach((key) => {
     if (key.childElementCount === 0 && !specialKeys.includes(key.textContent)) {
       key.textContent = capsLockStatus ? key.textContent.toUpperCase() : key.textContent.toLowerCase();
@@ -243,10 +285,18 @@ const toggleCapsLock = () => {
   });
 };
 
-window.addEventListener('keydown', (event) => {
+const toggleShift = () => {
+  shiftStatus = !shiftStatus;
+  createKeys()
+};
+
+function addEventListenerKeyLight() {
+  //const keyboard = document.querySelector('.keyboard');
+  const keys = document.querySelectorAll('.keyboard__key');
+textArea.addEventListener('keydown', (event) => {
   const currentKeyDown = event.key.toLocaleLowerCase();
   const currentKeyDownCode = event.code.toLocaleLowerCase();
-  // console.log(currentKeyDownCode)
+
   keys.forEach((el) => {
     const key = el.innerText;
     if (key === 'esc' && currentKeyDown === 'escape') {
@@ -265,7 +315,7 @@ window.addEventListener('keydown', (event) => {
   });
 });
 
-document.addEventListener('keyup', (event) => {
+textArea.addEventListener('keyup', (event) => {
   const currentKeyUp = event.key.toLocaleLowerCase();
   const currentKeyUpCode = event.code.toLocaleLowerCase();
   keys.forEach((el) => {
@@ -286,7 +336,7 @@ document.addEventListener('keyup', (event) => {
   });
 });
 
-
+};
 // textArea.selectionStart = 5
 // 5
 // textArea.selectionEnd = 5
