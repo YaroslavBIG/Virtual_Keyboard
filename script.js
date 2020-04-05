@@ -108,13 +108,13 @@ function createKeyIcons(iconName) {
 let keyLang = 'en';
 let shiftPress = false;
 let keyLayout;
-const keyCode = [
-    27, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123,
-    192, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 189, 187, 8, 
-    9, 81, 87, 69, 82, 84, 89, 85, 73, 79, 80, 219, 221, 220, 46, 
-    20, 65, 83, 68, 70, 71, 72, 74, 75, 76, 186, 222, 13, 
-    16, 90, 88, 67, 86, 66, 78, 77, 188, 190, 38, 16, 
-    17, 91, 18, 32, 18, 37, 40, 39, 17
+const keyCodes = [
+  27, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123,
+  192, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 189, 187, 8,
+  9, 81, 87, 69, 82, 84, 89, 85, 73, 79, 80, 219, 221, 220, 46,
+  20, 65, 83, 68, 70, 71, 72, 74, 75, 76, 186, 222, 13,
+  16, 90, 88, 67, 86, 66, 78, 77, 188, 190, 38, 16,
+  17, 91, 18, 32, 18, 37, 40, 39, 17, 
 ];
 
 const keyLayoutEn = [
@@ -220,7 +220,7 @@ function createKeys() {
       case 'tab':
         keyEl.innerHTML = createKeyIcons('keyboard_tab');
         keyEl.addEventListener('click', () => {
-          addText('    ');
+          addText(' ');
         });
         break;
 
@@ -355,30 +355,49 @@ const toggleShift = (bool) => {
   shiftPress = bool;
   createKeys()
 };
-
+const keys = document.querySelectorAll('.keyboard__key');
 function addEventListenerKeyLight() {
   const keys = document.querySelectorAll('.keyboard__key');
   
 textArea.addEventListener('keydown', (event) => {
   const currentKeyDown = event.key.toLocaleLowerCase();
   const currentKeyDownCode = event.code.toLocaleLowerCase();
-  //console.log(event.keyCode);
-  const pressedKey = keyCode.indexOf(event.keyCode);
-  console.log('KEY DOWN', keyLayout[pressedKey]);
+  console.log('DOWNCODE',event.keyCode);
+  const pressedKey = keyCodes.indexOf(event.keyCode);
   const keyPressedCurrentValue = keyLayout[pressedKey];
-  
-  //keyCode.push(event.keyCode);
-  //console.log(keyPressedCurrentValue)
+  //event.preventDefault()
+ // keyCodes.push(event.keyCode);
+ console.log(pressedKey)
+  console.log(keyPressedCurrentValue)
   
   keys.forEach((el) => {
-    const key = el.hasChildNodes() ? el.firstChild.innerText : el.innerText;
-    if (key === 'esc' && currentKeyDown === 'escape') {
+    const key = el.childElementCount >= 1 ? el.firstChild.innerText : el.innerText;
+    //console.log(key)
+    if (key === 'esc' && keyPressedCurrentValue === key) {
       el.classList.add('keyboard__key--pressed');
     }
-    else if (key === 'lshift' && currentKeyDownCode === 'shiftleft') {
-      el.classList.add('keyboard__key--pressed');
+    else if(key === 'del' && keyPressedCurrentValue === key) {
+      event.preventDefault();
+      el.classList.add('keyboard__key--pressed')
+      del()
     }
-    else if (key === 'rshift' && currentKeyDownCode === 'shiftright') {
+    else if(key === 'keyboard_tab' && keyPressedCurrentValue === 'tab') {
+      event.preventDefault();
+      el.classList.add('keyboard__key--pressed')
+      addText(' ')
+      textArea.focus()
+    }
+    else if(key === 'keyboard_return' && keyPressedCurrentValue === 'enter') {
+      event.preventDefault();
+      el.classList.add('keyboard__key--pressed')
+      addText('\n')
+      textArea.focus()
+    }
+    else if (key === 'lshift' && keyPressedCurrentValue === key) {
+      el.classList.add('keyboard__key--pressed');
+      console.log('!!!!')
+    }
+    else if (key === 'rshift' && keyPressedCurrentValue === key) {
       el.classList.add('keyboard__key--pressed');
     }
     else if(key === 'keyboard_capslock' && keyPressedCurrentValue === 'caps') {
@@ -386,19 +405,16 @@ textArea.addEventListener('keydown', (event) => {
       el.classList.add('keyboard__key--pressed')
       toggleCapsLock()
     }
-    else if(key === 'backspace' && keyPressedCurrentValue === 'backspace') {
+    else if(key === 'backspace' && keyPressedCurrentValue === key) {
       event.preventDefault();
       el.classList.add('keyboard__key--pressed')
       backspace();
     }
-    else if(key === 'del' && keyPressedCurrentValue === 'del') {
-      event.preventDefault();
-      el.classList.add('keyboard__key--pressed')
-      del()
-    }
+    
     else if (key === keyPressedCurrentValue) {
       el.classList.add('keyboard__key--pressed');
-      addText(keyPressedCurrentValue)
+      addText(keyPressedCurrentValue);
+      event.preventDefault();
     }
     
       // console.log("match Down")
@@ -409,37 +425,28 @@ textArea.addEventListener('keydown', (event) => {
 textArea.addEventListener('keypress', (event) => {
   const currentKeyUp = event.key.toLocaleLowerCase();
   const currentKeyUpCode = event.code.toLocaleLowerCase();
- // console.log('KEYpRESS', currentKeyUp)
-  // KeyboardEvent.shiftKey  !!!!!!!!!!!!!!!!!
-  const pressedKey = keyCode.indexOf(event.keyCode);
-  const keyPressedCurrentValue = keyLayout[pressedKey];
   
-  /* keys.forEach((el) => {
-    const key = el.innerText;
-    if (key === 'esc' && currentKeyUp === 'escape') {
-      event.repeat = false;
-      el.classList.remove('keyboard__key--pressed');
-    }
-    if (key === 'lshift' && currentKeyUpCode === 'shiftleft') {
-      event.repeat = false;
-      el.classList.remove('keyboard__key--pressed');
-    }
-    if (key === 'rshift' && currentKeyUpCode === 'shiftright') {
-      event.repeat = false;
-      el.classList.remove('keyboard__key--pressed');
-    }
-    if (el.innerText === currentKeyUp) {
-      el.classList.remove('keyboard__key--pressed');
-      // console.log("match UP")
-    }
-  });*/
+  // KeyboardEvent.shiftKey  !!!!!!!!!!!!!!!!!
+  const pressedKey = keyCodes.indexOf(event.keyCode);
+  const keyPressedCurrentValue = keyLayout[pressedKey];
+  /*console.log('KEYpRESS', event.keyCode)
   event.preventDefault()
+
+  keys.forEach((el) => {
+    const key = el.innerText;
+    if (key === keyPressedCurrentValue) {
+      el.classList.add('keyboard__key--pressed');
+      addText(keyPressedCurrentValue);
+      event.preventDefault();
+    }
+  
+  });*/
 });
 
 textArea.addEventListener('keyup', (event) => {
   //event.repeat = false;
   
-  const pressedKey = keyCode.indexOf(event.keyCode);
+  const pressedKey = keyCodes.indexOf(event.keyCode);
   const keyPressedCurrentValue = keyLayout[pressedKey];
   const currentKeyDown = event.key.toLocaleLowerCase();
   const currentKeyDownCode = event.code.toLocaleLowerCase();
