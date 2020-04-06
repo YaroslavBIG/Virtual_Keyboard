@@ -57,18 +57,8 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-.keyboard__key:first-child {
-    margin-right: 5%;
-}
-
 .keyboard__key:active {
     background: rgba(243, 77, 0, 0.39);
-}
-
-
-.keyboard__key--slim{
-    height: 6%;
-    margin-bottom: 10px;
 }
 
 .keyboard__key--slim:nth-child(6),
