@@ -111,6 +111,11 @@ let shiftPress = false;
 let keyLayout;
 let ctrlKeyPress = false;
 
+const toggleShift = (bool) => {
+  createKeys();
+  shiftPress = bool;
+};
+
 function keyLanguage() {
   keyLang = keyLang === 'en' ? 'ru' : 'en';
   createKeys()
@@ -338,13 +343,18 @@ function createKeys() {
       fragment.appendChild(document.createElement('br'));
     }
   });
+  
   const keyboard = document.querySelector('.keyboard__keys');
   keyboard.innerHTML = ''
   keyboard.appendChild(fragment); // add object
-  addEventListenerKeyLight()
+  
+  
+
+  
+  
 }
 createKeys();
-
+addEventListenerKeyLight()
 const keyboard = document.querySelector('.keyboard__keys');
 
 const toggleCapsLock = () => {
@@ -361,20 +371,12 @@ const toggleCapsLock = () => {
   });
 };
 
-const toggleShift = (bool) => {
-  createKeys();
-  shiftPress = bool;
-  // keys.forEach((key) => {
-  //   if (key.childElementCount === 0 && !specialKeys.includes(key.textContent)) {
-  //     key.textContent = shiftPress ? key.textContent.toUpperCase() : key.textContent.toLowerCase();
-  //   }
-  // });
-};
+
 const keys = document.querySelectorAll('.keyboard__key');
 function addEventListenerKeyLight() {
-const keys = document.querySelectorAll('.keyboard__key');
+
   
-textArea.addEventListener('keydown', (event) => {
+document.addEventListener('keydown', (event) => {
   const currentKeyDown = event.key.toLocaleLowerCase();
   const currentKeyDownCode = event.code.toLocaleLowerCase();
   //console.log('DOWNCODE', event.repeat);
@@ -384,7 +386,7 @@ textArea.addEventListener('keydown', (event) => {
  // keyCodes.push(event.keyCode);
  //console.log(pressedKey)
   if (!event.repeat) {
-    console.log('keyDown', keyPressedCurrentValue)
+    const keys = document.querySelectorAll('.keyboard__key');
     keys.forEach((el) => {
       const key = el.childElementCount >= 1 ? el.firstChild.innerText : el.innerText;
       //console.log(key)
@@ -417,7 +419,7 @@ textArea.addEventListener('keydown', (event) => {
         if(ctrlKeyPress){
           keyLanguage()
         }
-        preventDefault();
+        event.preventDefault();
       }
       else if (key === 'ctrl' && event.ctrlKey && !event.repeat) {
         el.classList.add('keyboard__key--pressed');
@@ -471,7 +473,7 @@ textArea.addEventListener('keydown', (event) => {
   });
 });*/
 
-textArea.addEventListener('keyup', (event) => {
+document.addEventListener('keyup', (event) => {
   //event.repeat = false;
   
   const pressedKey = keyCodes.indexOf(event.keyCode);
@@ -481,6 +483,7 @@ textArea.addEventListener('keyup', (event) => {
  // console.log('keyUP', currentKeyDown)
   console.log('keyUP', keyPressedCurrentValue)
   //event.preventDefault();
+  const keys = document.querySelectorAll('.keyboard__key');
   keys.forEach((el) => {
     const key = el.childElementCount >= 1 ? el.firstChild.innerText : el.innerText;
     if (event.shiftKey) {
@@ -503,7 +506,7 @@ textArea.addEventListener('keyup', (event) => {
       el.classList.remove('keyboard__key--pressed')
       toggleCapsLock()
     }
-    else{
+    else {
       el.classList.remove('keyboard__key--pressed')
     }
   });
