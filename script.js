@@ -112,8 +112,9 @@ let keyLayout;
 let ctrlKeyPress = false;
 
 const toggleShift = (bool) => {
-  createKeys();
   shiftPress = bool;
+  createKeys();
+  
 };
 
 function keyLanguage() {
@@ -410,19 +411,22 @@ document.addEventListener('keydown', (event) => {
         addText('\n')
         textArea.focus()
       }
-      else if (key === 'lshift' && event.shiftKey && !event.repeat) {
+      else if (key === 'lshift' && keyPressedCurrentValue === key) {
         el.classList.add('keyboard__key--pressed');
         toggleShift(true);
       }
       else if (key === 'alt' && event.altKey) {
         el.classList.add('keyboard__key--pressed');
         if(ctrlKeyPress){
+          el.classList.add('keyboard__key--pressed');
           keyLanguage()
+          ctrlKeyPress = false;
         }
         event.preventDefault();
       }
-      else if (key === 'ctrl' && event.ctrlKey && !event.repeat) {
+      else if (key === 'ctrl' && event.ctrlKey) {
         el.classList.add('keyboard__key--pressed');
+        console.log('CRTLLLL')
         ctrlKeyPress = true;
       }
       else if (key === 'rshift' && keyPressedCurrentValue === key) {
@@ -478,17 +482,15 @@ document.addEventListener('keyup', (event) => {
   
   const pressedKey = keyCodes.indexOf(event.keyCode);
   const keyPressedCurrentValue = keyLayout[pressedKey];
-  const currentKeyDown = event.key.toLocaleLowerCase();
-  const currentKeyDownCode = event.code.toLocaleLowerCase();
- // console.log('keyUP', currentKeyDown)
-  console.log('keyUP', keyPressedCurrentValue)
-  //event.preventDefault();
   const keys = document.querySelectorAll('.keyboard__key');
   keys.forEach((el) => {
     const key = el.childElementCount >= 1 ? el.firstChild.innerText : el.innerText;
-    if (event.shiftKey) {
+    if (key === 'lshift' && keyPressedCurrentValue === key) {
+      console.log('shift')
       el.classList.remove('keyboard__key--pressed');
       toggleShift(false);
+      shiftPress = false;
+      createKeys()
     }
     else if (key === 'alt' && event.altKey) {
       el.classList.remove('keyboard__key--pressed');
@@ -496,11 +498,6 @@ document.addEventListener('keyup', (event) => {
     else if (key === 'ctrl' && event.ctrlKey) {
       el.classList.remove('keyboard__key--pressed');
       ctrlKeyPress = false;
-    }
-    else if (key === 'lshift' && event.shiftKey) {
-      el.classList.remove('keyboard__key--pressed');
-      toggleShift(false);
-      createKeys()
     }
     else if(key === 'keyboard_capslock' && keyPressedCurrentValue === 'caps') { 
       el.classList.remove('keyboard__key--pressed')
