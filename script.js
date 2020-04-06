@@ -147,9 +147,9 @@ const keyLayoutSymRu = [
 
 const keyLayoutSymEn = [
   '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', 'backspace',
-  'tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '{', '}', '|', 'del',
-  'caps', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ':', '"', 'enter',
-  'lshift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', '<', '>', 'up', 'rshift',
+  'tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', '|', 'del',
+  'caps', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', '"', 'enter',
+  'lshift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', 'up', 'rshift',
   'ctrl', 'win', 'alt', 'space', 'altgr', 'left', 'down', 'right', 'ctrl', 'done',
 ];
 
@@ -157,33 +157,33 @@ const specialKeys = [
     'backspace', 'tab', 'del', 'caps', 'enter', 'lshift', 'done', 'up', 'rshift', 'ctrl', 'win', 'alt', 'space',
     'altgr', 'left', 'down', 'right'];
 
+const editCaretPos = (direction) => {
+  const currentPosCarret = textArea.selectionEnd;
+  const posMinus = () => {
+    //console.log(currentPosCarret);
+    textArea.focus();
+    textArea.setSelectionRange(currentPosCarret - 1, currentPosCarret - 1);
+    textArea.focus();
+  };
+  const posPlus = () => {
+    //console.log(currentPosCarret);
+    textArea.focus();
+    textArea.setSelectionRange(currentPosCarret + 1, currentPosCarret + 1);
+    textArea.focus();
+  };
+  switch (direction) {
+    case 'left':
+      posMinus();
+      break;
+    case 'right':
+      posPlus();
+      break;
+  }
+};
+
 function createKeys() {
   const fragment = document.createDocumentFragment();
   
-  const editCaretPos = (direction) => {
-    const currentPosCarret = textArea.selectionEnd;
-    const posMinus = () => {
-      //console.log(currentPosCarret);
-      textArea.focus();
-      textArea.setSelectionRange(currentPosCarret - 1, currentPosCarret - 1);
-      textArea.focus();
-    };
-    const posPlus = () => {
-      //console.log(currentPosCarret);
-      textArea.focus();
-      textArea.setSelectionRange(currentPosCarret + 1, currentPosCarret + 1);
-      textArea.focus();
-    };
-    switch (direction) {
-      case 'left':
-        posMinus();
-        break;
-      case 'right':
-        posPlus();
-        break;
-    }
-  };
-
   if(keyLang === 'en' && !shiftPress) {
     keyLayout = keyLayoutEn;
   };
@@ -194,11 +194,12 @@ function createKeys() {
 
   if(keyLang === 'en' && shiftPress) {
     keyLayout = keyLayoutSymEn;
-    //console.log('shiftPress === true')
+    console.log('shiftPress === true')
   };
 
   if(keyLang === 'ru' && shiftPress){
     keyLayout = keyLayoutSymRu;
+    console.log('shiftPress === true')
   };
   //console.log(shiftPress)
   keyLayout.forEach((key) => {
@@ -306,7 +307,7 @@ function createKeys() {
 
       default:
         keyEl.classList.add('keyboard__key');
-        keyEl.textContent = shiftPress ? key.toUpperCase() : key.toLowerCase(); 
+        keyEl.textContent = key; 
         keyEl.addEventListener('click', () => {
           addText(key);
         });
@@ -341,8 +342,7 @@ createKeys();
 const keyboard = document.querySelector('.keyboard__keys');
 
 const toggleCapsLock = () => {
-  console.log('toggleCapsLock')
-  const keyboard = document.querySelector('.keyboard__keys');
+  console.log('toggleCapsLock', capsLockStatus)
   capsLockStatus = !capsLockStatus;
   const caps = document.querySelector('#caps_lock')
   caps.classList.toggle('keyboard__key--inactive');
@@ -428,7 +428,6 @@ textArea.addEventListener('keydown', (event) => {
       }
       else if(key === 'keyboard_capslock' && keyPressedCurrentValue === 'caps') {
         el.classList.add('keyboard__key--pressed')
-        textArea.focus()
       }
       else if(key === 'space_bar' && keyPressedCurrentValue === 'space') {
         event.preventDefault();
@@ -490,8 +489,12 @@ textArea.addEventListener('keyup', (event) => {
       el.classList.remove('keyboard__key--pressed');
       ctrlKeyPress = false;
     }
-    else if(key === 'keyboard_capslock' && keyPressedCurrentValue === 'caps') {
-      event.preventDefault();
+    else if (key === 'lshift' && event.shiftKey) {
+      el.classList.remove('keyboard__key--pressed');
+      toggleShift(false);
+      createKeys()
+    }
+    else if(key === 'keyboard_capslock' && keyPressedCurrentValue === 'caps') { 
       el.classList.remove('keyboard__key--pressed')
       toggleCapsLock()
     }
