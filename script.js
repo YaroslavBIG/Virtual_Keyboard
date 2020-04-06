@@ -9,8 +9,13 @@ function addInput() {
   const inputBoard = document.createElement('textarea');
   inputBoard.classList.add('input_board');
   inputBoard.setAttribute('autofocus', 'autofocus');
+  const textHelp = document.createElement('p')
+  textHelp.classList.add('text-help')
+  const text = 'Создана под Windows; Смена раскладки CTRL + ALT'
   document.body.append(caption);
   document.body.querySelector('.caption').append(captionText);
+  document.body.append(textHelp);
+  document.body.querySelector('.text-help').append(text)
   document.body.append(inputBoard);
 }
 

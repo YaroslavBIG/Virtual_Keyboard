@@ -3,6 +3,11 @@
     color: blue;
 }
 
+.text-help {
+    text-align: center;
+    color: crimson;
+}
+
 .input_board {
     display: block;
     margin: 0px auto;
