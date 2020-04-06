@@ -106,7 +106,7 @@ function createKeyIcons(iconName) {
   return `<i class="material-icons">${iconName}</i>`;
 }
 
-let keyLang = 'en';
+let keyLang = localStorage.getItem('lang') || 'en';;
 let shiftPress = false;
 let keyLayout;
 let ctrlKeyPress = false;
@@ -116,6 +116,7 @@ function keyLanguage() {
   createKeys()
   capsLockStatus = false;
   textArea.focus()
+  localStorage.setItem('lang', keyLang);
 }
 
 const keyCodes = [
@@ -379,11 +380,9 @@ textArea.addEventListener('keydown', (event) => {
   //console.log('DOWNCODE', event.repeat);
   const pressedKey = keyCodes.indexOf(event.keyCode);
   const keyPressedCurrentValue = keyLayout[pressedKey];
-  if (event.repeat) {return console.log('DOWNCODE', event.repeat)};
   //event.preventDefault()
  // keyCodes.push(event.keyCode);
  //console.log(pressedKey)
-  console.log('keyDownrep', keyPressedCurrentValue)
   if (!event.repeat) {
     console.log('keyDown', keyPressedCurrentValue)
     keys.forEach((el) => {
@@ -418,6 +417,7 @@ textArea.addEventListener('keydown', (event) => {
         if(ctrlKeyPress){
           keyLanguage()
         }
+        preventDefault();
       }
       else if (key === 'ctrl' && event.ctrlKey && !event.repeat) {
         el.classList.add('keyboard__key--pressed');
@@ -448,7 +448,7 @@ textArea.addEventListener('keydown', (event) => {
         // console.log("match Down")
     });
   }
-}, true);
+}, false);
 
 /*textArea.addEventListener('keypress', (event) => {
   const currentKeyUp = event.key.toLocaleLowerCase();
