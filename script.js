@@ -418,14 +418,14 @@ function createKeys() {
       case 'up':
         keyEl.innerHTML = createKeyIcons('keyboard_arrow_up');
         keyEl.addEventListener('click', () => {
-          addText('up');
+          addText('\u2191');
         });
         break;
 
       case 'down':
         keyEl.innerHTML = createKeyIcons('keyboard_arrow_down');
         keyEl.addEventListener('click', () => {
-          addText('down');
+          addText('\u2193');
         });
         break;
 
