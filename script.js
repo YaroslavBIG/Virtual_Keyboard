@@ -210,12 +210,12 @@ const listenerKeyDown = (event) => {
     }
     if (key === 'keyboard_arrow_up' && keyPressedCurrentValue === 'up') {
       el.classList.add('keyboard__key--pressed');
-      addText('up');
+      addText('\u2191');
       event.preventDefault();
     }
     if (key === 'keyboard_arrow_down' && keyPressedCurrentValue === 'down') {
       el.classList.add('keyboard__key--pressed');
-      addText('down');
+      addText('\u2193');
       event.preventDefault();
     } else if (key.toLowerCase() === keyPressedCurrentValue && !specialKeys.includes(key)) {
       el.classList.add('keyboard__key--pressed');
