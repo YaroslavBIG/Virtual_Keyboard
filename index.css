@@ -60,6 +60,11 @@
     vertical-align: top;
     padding: 0;
     -webkit-tap-highlight-color: transparent;
+    transition: all ease-in 100ms;
+    -webkit-transition: all ease-in 100ms;
+    -moz-transition: all ease-in 100ms;
+    -ms-transition: all ease-in 100ms;
+    -o-transition: all ease-in 100ms;
 }
 
 .keyboard__key:active {
