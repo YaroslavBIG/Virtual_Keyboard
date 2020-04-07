@@ -1,0 +1,109 @@
+.caption {
+    text-align: center;
+    color: blue;
+}
+
+.text-help {
+    text-align: center;
+    color: crimson;
+}
+
+.input_board {
+    display: block;
+    margin: 0px auto;
+    width: 70%;
+    height: 40vh;
+}
+
+.keyboard {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    padding: 10px 0;
+    user-select: none;
+    background-color: aquamarine;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+    transition: bottom 0.4s;
+    -webkit-transition: bottom 0.4s;
+    -moz-transition: bottom 0.4s;
+    -ms-transition: bottom 0.4s;
+    -o-transition: bottom 0.4s;
+}
+
+.keybord--hidden {
+    bottom: -100%;
+}
+
+.keyboard__keys {
+    text-align: center;
+}
+
+.keyboard__key {
+    margin: 3px;
+    width: 5%;
+    max-width: 90px;
+    height: 40px;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    background: rgba(255,255,255, 0.2);
+    color: black;
+    font-size: 1.05rem;
+    outline: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: top;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    transition: all ease-in 100ms;
+    -webkit-transition: all ease-in 100ms;
+    -moz-transition: all ease-in 100ms;
+    -ms-transition: all ease-in 100ms;
+    -o-transition: all ease-in 100ms;
+}
+
+.keyboard__key:active {
+    background: rgba(243, 77, 0, 0.39);
+}
+
+.keyboard__key--slim:nth-child(6),
+.keyboard__key--slim:nth-child(10){
+    margin-left: 20px;
+}
+
+.keyboard__key--wide {
+    position: relative;
+    width: 12%;
+}
+
+.keyboard__key--extra-wide{
+    width: 36%;
+    max-width: 500px;
+}
+
+.keyboard__key--inactive::after {
+    content: url(./assets/img/toggle_off-24px.svg);
+    top: -2px;
+    right: 4px;
+    position: absolute;
+}
+
+.keyboard__key--active::after {
+    content: url(./assets/img/toggle_on-24px.svg);
+    top: -2px;
+    right: 4px;
+    position: absolute;
+}
+
+.keyboard__key--pressed {
+    background: rgba(243, 77, 0, 0.39);
+}
+
+span {
+    color: red;
+}
