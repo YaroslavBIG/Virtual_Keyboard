@@ -98,3 +98,7 @@
 .keyboard__key--pressed {
     background: rgba(243, 77, 0, 0.39);
 }
+
+span {
+    color: red;
+}

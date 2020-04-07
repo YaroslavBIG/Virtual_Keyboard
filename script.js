@@ -1,6 +1,11 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable no-return-assign */
 /* eslint-disable no-console */
+let keyLang = localStorage.getItem('lang') || 'en';
+let shiftPress = false;
+let keyLayout;
+let ctrlKeyPress = false;
+
 function addInput() {
   const caption = document.createElement('h1');
   caption.classList.add('caption');
@@ -99,17 +104,14 @@ const del = () => {
   textArea.setSelectionRange(selectStart, selectStart)
   textArea.focus();
 }
-// Clear text Area
-const clearTextArea = () => textArea.value = '';
 
 function createKeyIcons(iconName) {
   return `<i class="material-icons">${iconName}</i>`;
 }
 
-let keyLang = localStorage.getItem('lang') || 'en';;
-let shiftPress = false;
-let keyLayout;
-let ctrlKeyPress = false;
+function getLang(){
+  return `<span>${localStorage.getItem('lang') || 'en'}</span>`;
+}
 
 const toggleShift = (bool) => {
   shiftPress = bool;
@@ -118,45 +120,48 @@ const toggleShift = (bool) => {
 
 function keyLanguage() {
   keyLang = keyLang === 'en' ? 'ru' : 'en';
+  localStorage.setItem('lang', keyLang);
   createKeys()
   capsLockStatus = false;
   textArea.focus()
-  localStorage.setItem('lang', keyLang);
 }
 
 const listenerKeyDown = (event) => {
-  const pressedKey = keyCodes.indexOf(event.keyCode);
-  const keyPressedCurrentValue = keyLayout[pressedKey];
+const pressedKey = keyCodes.indexOf(event.keyCode);
+const keyPressedCurrentValue = keyLayout[pressedKey];
 const keys = document.querySelectorAll('.keyboard__key');
 keys.forEach((el) => {
   const key = el.childElementCount >= 1 ? el.firstChild.innerText : el.innerText;
-  const keyShifted = el.childElementCount >= 1 ? el.firstChild.innerText : el.innerText;
-  if (key === 'esc' && keyPressedCurrentValue === key) {
-    el.classList.add('keyboard__key--pressed');
-  }
-  else if(key === 'del' && keyPressedCurrentValue === key) {
+  const keyID = el.id;
+
+  if(key === 'del' && keyPressedCurrentValue === key) {
     event.preventDefault();
     el.classList.add('keyboard__key--pressed')
     del()
   }
-  else if(key === 'keyboard_tab' && keyPressedCurrentValue === 'tab') {
+  if(key === 'keyboard_tab' && keyPressedCurrentValue === 'tab') {
     event.preventDefault();
     el.classList.add('keyboard__key--pressed')
     addText(' ')
     textArea.focus()
   }
-  else if(key === 'keyboard_return' && keyPressedCurrentValue === 'enter') {
+  if(key === 'keyboard_return' && keyPressedCurrentValue === 'enter') {
     event.preventDefault();
     el.classList.add('keyboard__key--pressed')
     addText('\n')
     textArea.focus()
   }
-  else if (key === 'lshift' && keyPressedCurrentValue === key) {
+  if (keyID === 'lshift' && event.code === 'ShiftLeft') {
     toggleShift(true);
     const lshift = document.querySelector('#lshift')
     lshift.classList.add('keyboard__key--pressed');
   }
-  else if (key === 'alt' && event.altKey) {
+  if (keyID === 'rshift' && event.code === 'ShiftRight') {
+    toggleShift(true);
+    const rshift = document.querySelector('#rshift')
+    rshift.classList.add('keyboard__key--pressed');
+  }
+  if (key === 'alt' && event.code === 'AltLeft') {
     el.classList.add('keyboard__key--pressed');
     if(ctrlKeyPress){
       keyLanguage()
@@ -165,34 +170,43 @@ keys.forEach((el) => {
     }
     event.preventDefault();
   }
-  else if (key === 'ctrl' && event.ctrlKey) {
+  if(key === 'altgr' && event.code === 'AltRight') {
+    event.preventDefault();
+    el.classList.add('keyboard__key--pressed')
+  }
+  if (keyID === 'lctrl' && event.code === 'ControlLeft') {
     el.classList.add('keyboard__key--pressed');
     ctrlKeyPress = true;
   }
-  else if (key === 'rshift' && keyPressedCurrentValue === 'lshift') {
-    toggleShift(true);
-    const rshift = document.querySelector('#rshift')
-    rshift.classList.add('keyboard__key--pressed');
+
+  if (keyID === 'rctrl' && event.code === 'ControlRight') {
+    el.classList.add('keyboard__key--pressed');
   }
-  else if(key === 'backspace' && keyPressedCurrentValue === key) {
+
+  if(key === 'backspace' && event.code === 'Backspace') {
     event.preventDefault();
     el.classList.add('keyboard__key--pressed')
     backspace();
   }
-  else if(key === 'keyboard_capslock' && keyPressedCurrentValue === 'caps') {
+  if(key === 'keyboard_capslock' && keyPressedCurrentValue === 'caps') {
     el.classList.add('keyboard__key--pressed')
   }
-  else if(key === 'space_bar' && keyPressedCurrentValue === 'space') {
+  if(key === 'space_bar' && keyPressedCurrentValue === 'space') {
     event.preventDefault();
     el.classList.add('keyboard__key--pressed')
     addText(' ');
-  }    
-  else if (key.toLowerCase() === keyPressedCurrentValue) {
+  }
+  if(key === 'win' && event.code === 'MetaLeft') {
+    event.preventDefault();
+    el.classList.add('keyboard__key--pressed')
+  }
+  
+  else if (key.toLowerCase() === keyPressedCurrentValue && !specialKeys.includes(key)) {
     el.classList.add('keyboard__key--pressed');
     addText(keyPressedCurrentValue);
     event.preventDefault();
   }
-  else if (key === keyPressedCurrentValue) {
+  else if (key === keyPressedCurrentValue && !specialKeys.includes(key)) {
     el.classList.add('keyboard__key--pressed');
     addText(keyPressedCurrentValue);
     event.preventDefault();
@@ -207,7 +221,14 @@ const keyPressedCurrentValue = keyLayout[pressedKey];
 const keys = document.querySelectorAll('.keyboard__key');
 keys.forEach((el) => {
   const key = el.childElementCount >= 1 ? el.firstChild.innerText : el.innerText;
-  if (key === 'lshift' && keyPressedCurrentValue === key) {
+  const keyID = el.id
+  if (keyID === 'lshift' && event.code === 'ShiftLeft') {
+    el.classList.remove('keyboard__key--pressed');
+    toggleShift(false);
+    shiftPress = false;
+    createKeys()
+  }
+  else if (keyID === 'rshift' && event.code === 'ShiftRight') {
     el.classList.remove('keyboard__key--pressed');
     toggleShift(false);
     shiftPress = false;
@@ -262,7 +283,7 @@ const keyLayoutEn = [
   'tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\', 'del',
   'caps', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', 'enter',
   'lshift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', 'up', 'rshift',
-  'ctrl', 'win', 'alt', 'space', 'altgr', 'left', 'down', 'right', 'ctrl', 'done',  
+  'lctrl', 'win', 'alt', 'space', 'altgr', 'left', 'down', 'right', 'rctrl', 'done',  
 ];
 
 const keyLayoutRu = [
@@ -270,7 +291,7 @@ const keyLayoutRu = [
   'tab', 'й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ', '\\', 'del',
   'caps', 'ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э', 'enter',
   'lshift', 'я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю', 'up', 'rshift',
-  'ctrl', 'win', 'alt', 'space', 'altgr', 'left', 'down', 'right', 'ctrl', 'done', 
+  'lctrl', 'win', 'alt', 'space', 'altgr', 'left', 'down', 'right', 'rctrl', 'done', 
 ];
 
 const keyLayoutSymRu = [
@@ -278,7 +299,7 @@ const keyLayoutSymRu = [
   'tab', 'Й', 'Ц', 'У', 'К', 'Е', 'Н', 'Г', 'Ш', 'Щ', 'З', 'Х', 'Ъ', '|', 'del',
   'caps', 'Ф', 'Ы', 'В', 'А', 'П', 'Р', 'О', 'Л', 'Д', 'Ж', 'Э', 'enter',
   'lshift', 'Я', 'Ч', 'С', 'М', 'И', 'Т', 'Ь', 'Б', 'Ю', 'up', 'rshift',
-  'ctrl', 'win', 'alt', 'space', 'altgr', 'left', 'down', 'right', 'ctrl', 'done',
+  'lctrl', 'win', 'alt', 'space', 'altgr', 'left', 'down', 'right', 'rctrl', 'done',
 ];
 
 const keyLayoutSymEn = [
@@ -286,12 +307,12 @@ const keyLayoutSymEn = [
   'tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', '|', 'del',
   'caps', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', '"', 'enter',
   'lshift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', 'up', 'rshift',
-  'ctrl', 'win', 'alt', 'space', 'altgr', 'left', 'down', 'right', 'ctrl', 'done',
+  'lctrl', 'win', 'alt', 'space', 'altgr', 'left', 'down', 'right', 'rctrl', 'done',
 ];
 
 const specialKeys = [
-    'backspace', 'tab', 'del', 'caps', 'enter', 'lshift', 'done', 'up', 'rshift', 'ctrl', 'win', 'alt', 'space',
-    'altgr', 'left', 'down', 'right'];
+    'backspace', 'tab', 'del', 'caps', 'enter', 'lshift', 'done', 'up', 'rshift', 'ctrl', 'rctrl', 'lctrl', 'win', 'alt', 'space',
+    'altgr', 'left', 'down', 'right', 'shift'];
 
 const editCaretPos = (direction) => {
   const currentPosCarret = textArea.selectionEnd;
@@ -412,7 +433,7 @@ function createKeys() {
         break;
       
       case 'done':
-        keyEl.innerHTML = createKeyIcons('check_circle');
+        keyEl.innerHTML = getLang();
         keyEl.addEventListener('click', () => {
          keyLanguage()
         });
@@ -420,14 +441,19 @@ function createKeys() {
 
       case 'lshift':
         keyEl.classList.add('keyboard__key');
+        keyEl.classList.add('keyboard__key--wide');
         keyEl.id = 'lshift';
-        keyEl.textContent = key.toLowerCase();
+        keyEl.textContent = 'shift';
+        keyEl.addEventListener('click', () => {
+          keyLanguage()
+         });
       break;
 
       case 'rshift':
         keyEl.classList.add('keyboard__key');
+        keyEl.classList.add('keyboard__key--wide');
         keyEl.id = 'rshift';
-        keyEl.textContent = key.toLowerCase();
+        keyEl.textContent = 'shift';
       break;
 
       case 'del':
@@ -438,17 +464,27 @@ function createKeys() {
          });
       break;
 
+      case 'lctrl':
+        keyEl.classList.add('keyboard__key');
+        keyEl.id = 'lctrl';
+        keyEl.textContent = 'ctrl';
+      break;
+
+      case 'rctrl':
+        keyEl.classList.add('keyboard__key');
+        keyEl.id = 'rctrl';
+        keyEl.textContent = 'ctrl';
+      break;
+
       default:
         keyEl.classList.add('keyboard__key');
-        keyEl.textContent = key; 
+        keyEl.textContent = key;
+        if (!specialKeys.includes(key)){
         keyEl.addEventListener('click', () => {
           addText(key);
         });
-        
-        if (addSlimClass.includes(key)) {
-          keyEl.classList.add('keyboard__key--slim');
-        }
-        
+      }
+               
         break;
     }
 
@@ -478,13 +514,14 @@ const keyboard = document.querySelector('.keyboard__keys');
 const keys = document.querySelectorAll('.keyboard__key');
 
 keyboard.addEventListener('mousedown', (event) => {
-    if(event.target.innerText === 'lshift'){
+  const clickID = event.target.id;
+    if(clickID === 'lshift'){
       toggleShift(true)
       textArea.focus()
       const lshift = document.querySelector('#lshift')
       lshift.classList.add('keyboard__key--pressed');
     }
-    if(event.target.innerText === 'rshift'){
+    if(clickID === 'rshift'){
       event.target.classList.add('keyboard__key--pressed');
       toggleShift(true)
       textArea.focus()
@@ -493,10 +530,11 @@ keyboard.addEventListener('mousedown', (event) => {
     }
 });
 keyboard.addEventListener('mouseup', (event) => {
-  if(event.target.innerText === 'lshift'){
+  const clickID = event.target.id;
+  if(clickID === 'lshift'){
     toggleShift(false)
     }
-  if(event.target.innerText === 'rshift'){
+  if(clickID === 'rshift'){
     toggleShift(false)
     }
 });
