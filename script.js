@@ -5,6 +5,7 @@ let keyLang = localStorage.getItem('lang') || 'en';
 let shiftPress = false;
 let keyLayout;
 let ctrlKeyPress = false;
+let capsLockStatus = false;
 
 function addInput() {
   const caption = document.createElement('h1');
@@ -25,7 +26,6 @@ function addInput() {
 }
 
 addInput();
-let capsLockStatus = false;
 
 function addKeybord() {
   const keyboard = document.createElement('div');
@@ -197,6 +197,26 @@ const listenerKeyDown = (event) => {
     if (key === 'win' && event.code === 'MetaLeft') {
       event.preventDefault();
       el.classList.add('keyboard__key--pressed');
+    }
+    if (key === 'keyboard_arrow_left' && keyPressedCurrentValue === 'left') {
+      el.classList.add('keyboard__key--pressed');
+      editCaretPos('left');
+      event.preventDefault();
+    }
+    if (key === 'keyboard_arrow_right' && keyPressedCurrentValue === 'right') {
+      el.classList.add('keyboard__key--pressed');
+      editCaretPos('right');
+      event.preventDefault();
+    }
+    if (key === 'keyboard_arrow_up' && keyPressedCurrentValue === 'up') {
+      el.classList.add('keyboard__key--pressed');
+      addText('up');
+      event.preventDefault();
+    }
+    if (key === 'keyboard_arrow_down' && keyPressedCurrentValue === 'down') {
+      el.classList.add('keyboard__key--pressed');
+      addText('down');
+      event.preventDefault();
     } else if (key.toLowerCase() === keyPressedCurrentValue && !specialKeys.includes(key)) {
       el.classList.add('keyboard__key--pressed');
       addText(keyPressedCurrentValue);
@@ -208,7 +228,6 @@ const listenerKeyDown = (event) => {
     }
   });
 };
-
 
 const listenerKeyUp = (event) => {
   const pressedKey = keyCodes.indexOf(event.keyCode);
